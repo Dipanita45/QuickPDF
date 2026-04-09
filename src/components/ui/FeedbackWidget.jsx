@@ -62,7 +62,7 @@ export function FeedbackWidget() {
       <button
         onClick={() => { setOpen(true); setSent(false); }}
         title="Send feedback"
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 h-11 px-4 rounded-full bg-white text-black text-sm font-semibold shadow-[0_4px_24px_rgba(255,255,255,0.15)] hover:scale-105 hover:shadow-[0_4px_32px_rgba(255,255,255,0.25)] transition-all duration-200"
+        className="fixed bottom-20 right-6 z-40 flex items-center gap-2 h-11 px-4 rounded-full bg-white text-black text-sm font-semibold shadow-[0_4px_24px_rgba(255,255,255,0.15)] hover:scale-105 hover:shadow-[0_4px_32px_rgba(255,255,255,0.25)] transition-all duration-200"
       >
         <MessageSquarePlus className="w-4 h-4" />
         Feedback
