@@ -5,8 +5,8 @@ import { useFileStore } from './useFileStore';
 
 describe('useFileStore', () => {
   beforeEach(() => {
-    global.URL.createObjectURL = vi.fn(() => 'blob:fake-url');
-    global.URL.revokeObjectURL = vi.fn();
+    window.URL.createObjectURL = vi.fn(() => 'blob:fake-url');
+    window.URL.revokeObjectURL = vi.fn();
   });
 
   afterEach(() => {
@@ -49,6 +49,6 @@ describe('useFileStore', () => {
     });
 
     expect(result.current[0]).toBe(null);
-    expect(global.URL.revokeObjectURL).toHaveBeenCalledWith('blob:test');
+    expect(window.URL.revokeObjectURL).toHaveBeenCalledWith('blob:test');
   });
 });
