@@ -26,25 +26,6 @@ function usePdfPages(file) {
   const pdfRef    = useRef(null);
   const loadedRef = useRef(0);
 
-  // Open the PDF once when the file changes
-  useEffect(() => {
-    if (!file) { setPages([]); setTotalCount(0); pdfRef.current = null; loadedRef.current = 0; return; }
-
-    let cancelled = false;
-    setPages([]); setTotalCount(0); loadedRef.current = 0;
-
-    (async () => {
-      const buf = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-      if (cancelled) return;
-      pdfRef.current = pdf;
-      setTotalCount(pdf.numPages);
-      loadBatch(pdf, 1, Math.min(PAGE_BATCH, pdf.numPages), cancelled);
-    })();
-
-    return () => { cancelled = true; };
-  }, [file]); // eslint-disable-line
-
   async function loadBatch(pdf, from, to, cancelled) {
     setIsLoading(true);
     const results = [];
@@ -69,6 +50,29 @@ function usePdfPages(file) {
     if (!cancelled) setIsLoading(false);
   }
 
+  // Open the PDF once when the file changes
+  useEffect(() => {
+    if (!file) {
+      queueMicrotask(() => { setPages([]); setTotalCount(0); });
+      pdfRef.current = null; loadedRef.current = 0; return;
+    }
+
+    let cancelled = false;
+    queueMicrotask(() => { setPages([]); setTotalCount(0); });
+    loadedRef.current = 0;
+
+    (async () => {
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      if (cancelled) return;
+      pdfRef.current = pdf;
+      setTotalCount(pdf.numPages);
+      loadBatch(pdf, 1, Math.min(PAGE_BATCH, pdf.numPages), cancelled);
+    })();
+
+    return () => { cancelled = true; };
+  }, [file]);
+
   const loadMore = useCallback(() => {
     const pdf = pdfRef.current;
     if (!pdf || isLoading) return;
@@ -76,9 +80,9 @@ function usePdfPages(file) {
     if (from > pdf.numPages) return;
     const to = Math.min(from + PAGE_BATCH - 1, pdf.numPages);
     loadBatch(pdf, from, to, false);
-  }, [isLoading]); // eslint-disable-line
+  }, [isLoading]);
 
-  const hasMore = loadedRef.current < totalCount;
+  const hasMore = pages.length < totalCount;
 
   return { pages, totalCount, hasMore, isLoading, loadMore };
 }

@@ -98,7 +98,7 @@ export function ImageToPdf() {
       setError(null);
     setItems((prev) => [...prev, ...valid.map(makeItem)]);
     setDone(false);
-  }, []);
+  }, [setItems]);
 
   function removeItem(id) {
     setItems((prev) => {

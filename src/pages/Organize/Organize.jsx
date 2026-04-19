@@ -74,7 +74,7 @@ export function Organize() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [setFile, setThumbnails]);
 
   const handleDragStart  = useCallback((index) => { dragItem.current = index; }, []);
   const handleDragEnter  = useCallback((index) => { if (dragItem.current === index) return; dragOverItem.current = index; setDragOverIndex(index); }, []);
@@ -84,9 +84,9 @@ export function Organize() {
     if (from === null || to === null || from === to) { dragItem.current = null; dragOverItem.current = null; return; }
     setThumbnails((prev) => { const next = [...prev]; const [moved] = next.splice(from, 1); next.splice(to, 0, moved); return next; });
     dragItem.current = null; dragOverItem.current = null;
-  }, []);
-  const handleRemovePage = useCallback((id) => setThumbnails((prev) => prev.filter((t) => t.id !== id)), []);
-  const handleReset      = useCallback(() => { setFile(null); setThumbnails([]); setError(null); setIsLoading(false); setIsProcessing(false); setDragOverIndex(null); }, []);
+  }, [setThumbnails]);
+  const handleRemovePage = useCallback((id) => setThumbnails((prev) => prev.filter((t) => t.id !== id)), [setThumbnails]);
+  const handleReset      = useCallback(() => { setFile(null); setThumbnails([]); setError(null); setIsLoading(false); setIsProcessing(false); setDragOverIndex(null); }, [setFile, setThumbnails]);
 
   const handleDownload = useCallback(async () => {
     if (!file || thumbnails.length === 0) return;

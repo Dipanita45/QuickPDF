@@ -138,7 +138,7 @@ function PreviewModal({ item, onClose }) {
     if (!item) return;
     const url = URL.createObjectURL(item.file);
     objectUrl.current = url;
-    setSrc(url);
+    queueMicrotask(() => setSrc(url));
     return () => { URL.revokeObjectURL(url); };
   }, [item]);
 
@@ -251,7 +251,7 @@ export function Merge() {
         )
       );
     }
-  }, []);
+  }, [setItems]);
 
   // ── remove / clear ──
   function removeItem(id) {
