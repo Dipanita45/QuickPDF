@@ -61,7 +61,7 @@ Every major PDF tool — Smallpdf, ILovePDF, Adobe Acrobat Online — routes you
 
 ## Getting Started
 
-**Prerequisites:** Node.js v18+
+**Prerequisites:** Node.js v22+ (LTS)
 
 ```bash
 # Clone the repo
